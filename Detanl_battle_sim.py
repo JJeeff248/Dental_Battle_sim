@@ -1,5 +1,7 @@
 # Detal_battle_sim.py
-# v0.01
+# v0.02
+
+# Removed Tkinter until later date
 
 # Modified: 29/07/2019
 # Created: 29/07/2019
@@ -10,21 +12,23 @@ from tkinter import *
 import time
 import sys
 
-root = Tk()
-root.title("Dental Battle Sim  | ChrisPy")
-
 try: color = sys.stdout.shell
 except AttributeError: raise RuntimeError("Use IDLE")
 
+
+# Dental Battle Sim  | ChrisPy #
+
 def title_screen():
-    """Display a title screen so that when the user presses any button it switches to a welcome screen"""
-    pass
-    title_text = """
+    """
+    Display a title screen so that when the user presses
+    any button it switches to a welcome screen
+    """
+    
+    print("""
 Hello and welcome to Dental Battle Simulator!
 To start press Enter
-"""
-    title = Label(root, text=title_text)
-    title.pack()
+""")
+    input("")
 
 def username():
     """Get a 3 Character username from the user for use throughout the game"""
@@ -40,11 +44,8 @@ def username():
 
 
 def main():
-    canvas = Canvas(root, width = 768, height = 432)
-    canvas.pack()
-    # title_screen()
+    title_screen()
     user = username()
     print("Hello {}".format(user))
 
 main()
-root.mainloop()
