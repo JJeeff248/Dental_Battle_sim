@@ -57,15 +57,18 @@ def username():
 
 def menu():
     """List all the options for the user to do"""
-    print("""\n=====~=====~=====~=====~=====~=====~=====~=====~=====~=====~=====~=====~=====~==
-To select an option enter the letter assigned to it
-To Start the tutorial type: T
-To Start the game type: S
-To Quit the program type: Q
-=====~=====~=====~=====~=====~=====~=====~=====~=====~=====~=====~=====~=====~==
-""")
+    color.write("\n=====~=====~=====~=====~=====~=====~=====~=====~=====~=====~=====~=====~=====~==", "DEFINITION")
+    color.write("\nTo select an option enter the number assigned to it", "DEFINITION")
+    color.write("\n1) Start the ", "DEFINITION")
+    color.write("tutorial","KEYWORD")
+    color.write("\n2) Start the ","DEFINITION")
+    color.write("game","KEYWORD")
+    color.write("\n3) ","DEFINITION")
+    color.write("Quit","KEYWORD")
+    color.write("\n=====~=====~=====~=====~=====~=====~=====~=====~=====~=====~=====~=====~=====~==", "DEFINITION")
+
     # Calling the error module to get a valid input from the user
-    choice = error_check(['t','s','q'], "--> ", "ERROR! Please enter a valid letter as listed above.", False)
+    choice = error_check(['1','2','3'], "--> ", "ERROR! Please enter a valid number as listed above.", False)
     return choice
 
 def attacks(user):
@@ -81,7 +84,8 @@ def tutorial(user):
 
 def start(user):
     """Start the game for the user"""
-    pass
+    user_health = 370
+    
 
 def game_over(user):
     """Allow the user to decide whether they want to try again, return to the main menu or quit after a death"""
@@ -144,9 +148,9 @@ def main():
 
         # Check what choice the user inputed then call that function
 
-        if choice == 't' or choice == "tutorial":
+        if choice == '1' or choice == "tutorial":
             tutorial(user)
-        elif choice == 's' or choice == "start":
+        elif choice == '2' or choice == "start":
             start(user)
         else:
             print("Thank you for plating my game. Goodbye")
