@@ -1,10 +1,11 @@
 # Detal_battle_sim.py
 
-# Modified: /07/2019
+# Modified: 20/10/2019
 # Created: 29/07/2019
 # By Chris Sa
 
 from error_module import *
+from random import randint
 import time
 import sys
 
@@ -15,33 +16,29 @@ except AttributeError: raise RuntimeError("Use IDLE")
 # Dental Battle Sim  | ChrisPy #
 
 def title_screen():
-    """
-    Display a title screen so that when the user presses
-    any button it switches to a welcome screen
-    """
+    """Display a title screen and wait for the user to press enter"""
 
-    text = """
-    _______   _______ .__   __. .___________. __       _______.___________.     
-   |       \ |   ____||  \ |  | |           ||  |     /       |           |     
-   |  .--.  ||  |__   |   \|  | `---|  |----`|  |    |   (----`---|  |----`     
-   |  |  |  ||   __|  |  . `  |     |  |     |  |     \   \       |  |          
-   |  '--'  ||  |____ |  |\   |     |  |     |  | .----)   |      |  |          
-   |_______/ |_______||__| \__|     |__|     |__| |_______/       |__|          
-                                                                                
- _______  __    _______  __    __  .___________.        _______. __  .___  ___. 
-|   ____||  |  /  _____||  |  |  | |           |       /       ||  | |   \/   | 
-|  |__   |  | |  |  __  |  |__|  | `---|  |----`      |   (----`|  | |  \  /  | 
-|   __|  |  | |  | |_ | |   __   |     |  |            \   \    |  | |  |\/|  | 
-|  |     |  | |  |__| | |  |  |  |     |  |        .----)   |   |  | |  |  |  | 
-|__|     |__|  \______| |__|  |__|     |__|        |_______/    |__| |__|  |__| 
-                                                                                
+    title = ["    _______   _______ .__   __. .___________. __       _______.___________.     ",
+                  "   |       \ |   ____||  \ |  | |           ||  |     /       |           |     ",
+                  "   |  .--.  ||  |__   |   \|  | `---|  |----`|  |    |   (----`---|  |----`     ",
+                  "   |  |  |  ||   __|  |  . `  |     |  |     |  |     \   \       |  |          ",
+                  "   |  '--'  ||  |____ |  |\   |     |  |     |  | .----)   |      |  |          ",
+                  "   |_______/ |_______||__| \__|     |__|     |__| |_______/       |__|          ",
+                  "", "",
+                  " _______  __    _______  __    __  .___________.        _______. __  .___  ___. ",
+                  "|   ____||  |  /  _____||  |  |  | |           |       /       ||  | |   \/   | ",
+                  "|  |__   |  | |  |  __  |  |__|  | `---|  |----`      |   (----`|  | |  \  /  | ",
+                  "|   __|  |  | |  | |_ | |   __   |     |  |            \   \    |  | |  |\/|  | ",
+                  "|  |     |  | |  |__| | |  |  |  |     |  |        .----)   |   |  | |  |  |  | ",
+                  "|__|     |__|  \______| |__|  |__|     |__|        |_______/    |__| |__|  |__| "
+                  ,""]
 
+    for i in range(len(title)):
+        print(title[i])
+        
+    print("\n\nHello and welcome to Dental Fight Simulator!")
+    input("To start press Enter\n")
 
-Hello and welcome to Dental Battle Simulator!
-To start press Enter
-"""
-    print(text)
-    input("")
 
 def username():
     """Get a 3 Character username from the user for use throughout the game"""
@@ -56,57 +53,119 @@ def username():
     return user
 
 def menu():
-    """List all the options for the user to do"""
-    color.write("\n=====~=====~=====~=====~=====~=====~=====~=====~=====~=====~=====~=====~=====~==", "DEFINITION")
-    color.write("\nTo select an option enter the number assigned to it", "DEFINITION")
-    color.write("\n1) Start the ", "DEFINITION")
+    """List all the options for the user to choose from"""
+    color.write("\n=====~=====~=====~=====~=====~=====~=====~=====~=====~=====~=====~=====~=====~==", "stdout")
+    color.write("\nTo select an option enter the number assigned to it", "stdout")
+    color.write("\n1) Start the ", "stdout")
     color.write("tutorial","KEYWORD")
-    color.write("\n2) Start the ","DEFINITION")
+    color.write("\n2) Start the ","stdout")
     color.write("game","KEYWORD")
-    color.write("\n3) ","DEFINITION")
+    color.write("\n3) ","stdout")
     color.write("Quit","KEYWORD")
-    color.write("\n=====~=====~=====~=====~=====~=====~=====~=====~=====~=====~=====~=====~=====~==", "DEFINITION")
+    color.write("\n=====~=====~=====~=====~=====~=====~=====~=====~=====~=====~=====~=====~=====~==\n", "stdout")
 
-    # Calling the error module to get a valid input from the user
-    choice = error_check(['1','2','3'], "--> ", "ERROR! Please enter a valid number as listed above.", False)
+    choice = error_check([1,3], "--> ", "ERROR! Please enter a valid number as listed above.", True)
     return choice
-
-def attacks(user):
-    user_attacks = {"Floss Lasso": [[3,7,15], "Flossing helps..."],"Brush Brush": [[4,9,13], "Brushing helps..."],"See a Dentist": [[5,10,14], "If you your teeth hurt then you should see a dentist"]}
-    mrs_fizz = {"Dissolve": [[5]],"Spray": [[2]],"Acid Slap": [[4]], "Catch frase i think": "The Carbon Dioxied (The thing that makes them Fizz) in fizzy drinks can cause damage to your teeth because it is acidic"}
 
 def tutorial(user):
     """Teach the user how to play the game"""
-    color.write("Welcome to ", "BULLETIN")
-    color.write("Dentist Fight Sim \n", "KEYWORD")
-    print("When you get into a battle you will have 3 attcaks to chose from, Floss Lasso, Brush Brush and See a Dentist")
-    
+    color.write("There is currently no tutorial but there are plans to add one in the near future\n", "console")
+
+
+def user_attack(user_attacks):
+    """Allows the user to choose an attack from a given list"""
+    print()
+    i = 1
+    attacks = []
+    for key in sorted(user_attacks):
+        print("{}) {}".format(i, key))
+        attacks.append(key)
+        i += 1
+    choice = error_check([1,3], "--> ", "ERROR! Please enter a valid number as listed above.", True)
+    attack = attacks[choice - 1]
+    return attack
+
 
 def start(user):
     """Start the game for the user"""
-    user_health = 370
-    
+    user_attacks = {"Floss Lasso": [[7,15], "Flossing helps... Flossing too much..."],"Brush Brush": [[4,13], "Brushing helps..."],"See a Dentist": [[16,24], "If you your teeth hurt then you should see a dentist"]}
+    enemies = {"Mrs Fizz": ["Acid Spray",[5,20],"The Carbon Dioxied (The thing that makes drinks fizz) in fizzy drinks can cause damage to your teeth because it is acidic"]}
+
+    # Create a list of all the enemies
+    enemies_list = []
+    for key in sorted(enemies):
+        enemies_list.append(key)
+
+    # Select the enemy and it's attack
+    enemy = enemies_list[randint(0, len(enemies_list) - 1)]
+    enemy_attack = enemies[enemy][0]
+
+    # Set starting HP
+    enemy_hp = randint(250, 350)
+    user_hp = 300
+
+    while enemy_hp > 0 and user_hp >0:
+        attack_choice = user_attack(user_attacks)
+        # Calculate damage done to enemy
+        damage = user_attacks[attack_choice][0]
+        damage_dealt = randint(damage[0], damage[1])
+        enemy_hp -= damage_dealt
+
+        # Calculate damage done to user
+        damage = enemies[enemy][1]
+        enemy_damage_dealt = randint(damage[0], damage[1])
+        user_hp -= enemy_damage_dealt
+
+        # Output the stats for the round
+        color.write("\n≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈", "stdout")
+        color.write("\nYou used {}".format(attack_choice), "stdout")
+        color.write("\nIt dealt {} damage".format(damage_dealt), "stdout")
+        color.write("\n{} now has {}HP".format(enemy, enemy_hp), "stdout")
+        color.write("\n≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈", "stdout")
+        color.write("\n{} used {}".format(enemy, enemy_attack), "stdout")
+        color.write("\nIt dealt {} damage".format(enemy_damage_dealt), "stdout")
+        color.write("\nYou now have {}HP".format(user_hp), "stdout")
+        color.write("\n≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈\n\n", "stdout")
+
+    if user_hp <= 0:
+        game_over(user)
+    else:
+        victory(user)
+        
 
 def game_over(user):
     """Allow the user to decide whether they want to try again, return to the main menu or quit after a death"""
-    print("""\n=====~=====~=====~=====~=====~=====~=====~=====~=====~=====~=====~=====~=====~==
-To select an option enter the letter assigned to it
-To Try Again type: T
-To go to the Main menu type: M
-To Quit the program type: Q
-=====~=====~=====~=====~=====~=====~=====~=====~=====~=====~=====~=====~=====~==
-""")
-    # Calling the error module to get a valid input from the user
-    choice = error_check(['t','m','q'], "--> ", "ERROR! Please enter a valid letter as listed above.", False)
-    if choice == 't':
+    color.write("\nYou ", "stdout")
+    color.write("DIED", "COMMENT")
+    color.write("\n=====~=====~=====~=====~=====~=====~=====~=====~=====~=====~=====~=====~=====~==", "stdout")
+    color.write("\nTo select an option enter the number assigned to it", "stdout")
+    color.write("\n1) ", "stdout")
+    color.write("Menu","KEYWORD")
+    color.write("\n2) ","stdout")
+    color.write("Try again","KEYWORD")
+    color.write("\n3) ","stdout")
+    color.write("Quit","KEYWORD")
+    color.write("\n=====~=====~=====~=====~=====~=====~=====~=====~=====~=====~=====~=====~=====~==\n", "stdout")
+
+    choice = error_check([1,3], "--> ", "ERROR! Please enter a valid number as listed above.", True)
+
+    if choice == 1:
         start(user)
-    elif choice == 'q':
-        exit_game()
+    elif choice == 3:
+        exit_game(user)
     else:
         pass
 
+def victory(user):
+    """Congratulate the user"""
+    print("Congratulations")
+
+
 def exit_game(user):
-    print("ChrisPy would like to thank you, {} for taking the time to play my game. I hope to see you again soon".format(user))
+    """Quit the game with"""
+    color.write("ChrisPy would like to thank you, ", "TODO")
+    color.write("{}".format(user), "KEYWORD")
+    color.write(" for taking the time to play my game. I hope to see you again soon", "stdin")
     time.sleep(2)
     for i in range (15):
         print("")
@@ -129,34 +188,33 @@ def exit_game(user):
     for i in range(len(end_screen)):
         print(end_screen[i])
         time.sleep(0.1)
-    
+
     for i in range(30):
         time.sleep(.1)
         print("")
     time.sleep(3)
     print("\n" * 100)
-    
+    raise SystemExit(0)
+
 
 def main():
     title_screen()
     user = username()
 
-    q = False
-    
-    while q == False:
+    while True:
         choice = menu()
 
         # Check what choice the user inputed then call that function
 
-        if choice == '1' or choice == "tutorial":
+        if choice == 1 or choice == "tutorial":
             tutorial(user)
-        elif choice == '2' or choice == "start":
+        elif choice == 2 or choice == "start":
             start(user)
         else:
-            print("Thank you for plating my game. Goodbye")
+            print("Thank you for playing my game. Goodbye")
             exit_game(user)
-            q = True
-    
+            
+
 
 if __name__ == '__main__':
     main()
