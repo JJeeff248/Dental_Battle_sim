@@ -1,6 +1,6 @@
 # Detal_battle_sim.py
 
-# Modified: 20/10/2019
+# Modified: 23/10/2019
 # Created: 29/07/2019
 # By Chris Sa
 
@@ -72,25 +72,38 @@ def tutorial(user):
     color.write("There is currently no tutorial but there are plans to add one in the near future\n", "console")
 
 
-def user_attack(user_attacks):
+def user_attack(user_attacks, move_restriction, last_attack):
     """Allows the user to choose an attack from a given list"""
     print()
     i = 1
     attacks = []
-    for key in sorted(user_attacks):
-        print("{}) {}".format(i, key))
-        attacks.append(key)
-        i += 1
-    choice = error_check([1,3], "--> ", "ERROR! Please enter a valid number as listed above.", True)
-    attack = attacks[choice - 1]
+    if move_restriction == 2:
+        for key in sorted(user_attacks):
+            attacks.append(key)
+            i += 1
+        attacks.remove(last_attack) # Remove the attack that the user can't use for the round
+        for i in range(len(attacks)):
+            print("{}) {}".format(i+1, attacks[i]))
+        choice = error_check([1,2], "--> ", "ERROR! Please enter a valid number as listed above.", True)
+        attack = attacks[choice - 1]
+    else:
+        for key in sorted(user_attacks):
+            print("{}) {}".format(i, key))
+            attacks.append(key)
+            i += 1
+        choice = error_check([1,3], "--> ", "ERROR! Please enter a valid number as listed above.", True)
+        attack = attacks[choice - 1]
+        
     return attack
 
 
 def start(user):
     """Start the game for the user"""
-    user_attacks = {"Floss Lasso": [[7,15], "Flossing helps... Flossing too much..."],"Brush Brush": [[4,13], "Brushing helps..."],"See a Dentist": [[16,24], "If you your teeth hurt then you should see a dentist"]}
-    enemies = {"Mrs Fizz": ["Acid Spray",[5,20],"The Carbon Dioxied (The thing that makes drinks fizz) in fizzy drinks can cause damage to your teeth because it is acidic"]}
-
+    user_attacks = {"Floss Lasso": [[3,6], "Flossing helps... Flossing too much..."],"Brush Brush": [[5,9], "Brushing helps..."],"See a Dentist": [[9, 13], "If you your teeth hurt then you should see a dentist"]}
+    enemies = {"Mrs Fizz": ["Acid Spray",[1,6],"The Carbon Dioxied (The thing that makes drinks fizz) in fizzy drinks can cause damage to your teeth because it is acidic"],
+               "JawBreaker": ["Tooth Crush", [8,11], "Jawbreakers contain citric acid which dissolves the enamel on your teeth. The enamel is the protective layer on your teeth, so you don't want to loose it!"],
+               "Mr Doug Nut": ["Sugar Assault", [2,7], "Sugar "]}
+    
     # Create a list of all the enemies
     enemies_list = []
     for key in sorted(enemies):
@@ -100,12 +113,25 @@ def start(user):
     enemy = enemies_list[randint(0, len(enemies_list) - 1)]
     enemy_attack = enemies[enemy][0]
 
-    # Set starting HP
-    enemy_hp = randint(250, 350)
-    user_hp = 300
+    # Back story
+    color.write("Some Backstory", "stdout")
 
-    while enemy_hp > 0 and user_hp >0:
-        attack_choice = user_attack(user_attacks)
+    # Set starting HP
+    enemy_hp = randint(75,150)
+    user_hp = 100
+
+    move_restriction = 1
+    last_attack = ""
+
+    while enemy_hp > 0 and user_hp > 0:
+        attack_choice = user_attack(user_attacks, move_restriction, last_attack)
+
+        # Restrict the number of times a user can use the same move in a row
+        if attack_choice == last_attack:
+            move_restriction += 1
+        else:
+            move_restriction = 0
+
         # Calculate damage done to enemy
         damage = user_attacks[attack_choice][0]
         damage_dealt = randint(damage[0], damage[1])
@@ -116,22 +142,39 @@ def start(user):
         enemy_damage_dealt = randint(damage[0], damage[1])
         user_hp -= enemy_damage_dealt
 
-        # Output the stats for the round
-        color.write("\n≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈", "stdout")
-        color.write("\nYou used {}".format(attack_choice), "stdout")
-        color.write("\nIt dealt {} damage".format(damage_dealt), "stdout")
-        color.write("\n{} now has {}HP".format(enemy, enemy_hp), "stdout")
-        color.write("\n≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈", "stdout")
-        color.write("\n{} used {}".format(enemy, enemy_attack), "stdout")
-        color.write("\nIt dealt {} damage".format(enemy_damage_dealt), "stdout")
-        color.write("\nYou now have {}HP".format(user_hp), "stdout")
-        color.write("\n≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈\n\n", "stdout")
-
-    if user_hp <= 0:
-        game_over(user)
-    else:
-        victory(user)
+        # If the hp for the user or enemy is negative set it to 0
+        if user_hp < 0 or enemy_hp < 0:
+            if user_hp <= 0:
+                user_hp = 0
+            else:
+                enemy_hp = 0
         
+        # Output the stats for the round
+        color.write("\n≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈", "stdout")
+        color.write("\nYou used {}".format(attack_choice), "stdout")
+        color.write("\nIt dealt ", "stdout")
+        color.write("{}".format(damage_dealt), "COMMENT")
+        color.write(" damage" , "stdout")
+        color.write("\n{} now has ".format(enemy), "stdout")
+        color.write("{}".format(enemy_hp), "STRING")
+        color.write("HP" , "stdout")
+        color.write("\n≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈", "stdout")
+        color.write("\n{} used {}".format(enemy, enemy_attack), "stdout")
+        color.write("\nIt dealt ", "stdout")
+        color.write("{}".format(enemy_damage_dealt), "COMMENT")
+        color.write(" damage" , "stdout")
+        color.write("\nYou now have ", "stdout")
+        color.write("{}".format(user_hp), "STRING")
+        color.write("HP" , "stdout")
+        color.write("\n≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈\n\n", "stdout")
+
+        last_attack = attack_choice
+
+        if user_hp <= 0:
+                game_over(user)
+        elif enemy_hp <= 0:
+            victory(user)
+
 
 def game_over(user):
     """Allow the user to decide whether they want to try again, return to the main menu or quit after a death"""
@@ -149,7 +192,7 @@ def game_over(user):
 
     choice = error_check([1,3], "--> ", "ERROR! Please enter a valid number as listed above.", True)
 
-    if choice == 1:
+    if choice == 2:
         start(user)
     elif choice == 3:
         exit_game(user)
@@ -205,7 +248,6 @@ def main():
         choice = menu()
 
         # Check what choice the user inputed then call that function
-
         if choice == 1 or choice == "tutorial":
             tutorial(user)
         elif choice == 2 or choice == "start":
@@ -215,25 +257,9 @@ def main():
             exit_game(user)
             
 
-
 if __name__ == '__main__':
     main()
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+## ----- TODO ----- ##
+# * 
