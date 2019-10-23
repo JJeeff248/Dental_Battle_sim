@@ -44,12 +44,12 @@ def username():
     """Get a 3 Character username from the user for use throughout the game"""
     valid = False
     while valid == False:
-        user = input("\nChoose a 3 character user name: ").upper()
+        user = input("\nChoose a 3 character username: ").upper()
 
         if len(user) == 3:
             valid = True
         else:
-            color.write("Please enter a 3 character user name", "COMMENT")
+            color.write("Please enter a 3 character username", "COMMENT")
     return user
 
 def menu():
@@ -99,10 +99,12 @@ def user_attack(user_attacks, move_restriction, last_attack):
 
 def start(user):
     """Start the game for the user"""
-    user_attacks = {"Floss Lasso": [[3,6], "Flossing helps... Flossing too much..."],"Brush Brush": [[5,9], "Brushing helps..."],"See a Dentist": [[9, 13], "If you your teeth hurt then you should see a dentist"]}
-    enemies = {"Mrs Fizz": ["Acid Spray",[1,6],"The Carbon Dioxied (The thing that makes drinks fizz) in fizzy drinks can cause damage to your teeth because it is acidic"],
-               "JawBreaker": ["Tooth Crush", [8,11], "Jawbreakers contain citric acid which dissolves the enamel on your teeth. The enamel is the protective layer on your teeth, so you don't want to loose it!"],
-               "Mr Doug Nut": ["Sugar Assault", [2,7], "Sugar "]}
+    user_attacks = {"Floss Lasso": [[3,6], "You should floss once a day. Flossing helps remove old food from inbetween your teath that your tooth brush might not be able to get"],
+                    "Brush Brush": [[5,9], "You should brush your teeth twice a day for at least 2 minutes each time. Brushing your teeth is the best way to look after your teeth"],
+                    "See a Dentist": [[9, 13], "You should see a dentist if your teeth hurt, it hurts to eat, there is any swelling or you haven't seen them in a while"]}
+    enemies = {"Mrs Fizz": ["Acid Spray",[1,6],"The Carbon Dioxide (The thing that makes drinks fizz) in fizzy drinks can cause damage to your teeth because it is acidic which can lead to dental erosion"],
+               "JawBreaker": ["Tooth Crush", [8,11], "Jawbreakers contain citric acid which dissolves the enamel on your teeth. The enamel is the protective layer on your teeth, so you don't want to lose it! They can also break your teeth causing lots of pain"],
+               "Mr Doug Nut": ["Sugar Assault", [2,7], "Sugar feeds bacteria in your mouth causing plaque (a thin film that coats your teeth), over time the plaque becomes more acidic causing it to eat away at your teeth and form holes"]}
     
     # Create a list of all the enemies
     enemies_list = []
@@ -112,12 +114,18 @@ def start(user):
     # Select the enemy and it's attack
     enemy = enemies_list[randint(0, len(enemies_list) - 1)]
     enemy_attack = enemies[enemy][0]
+    damage = enemies[enemy][1]
+    enemy_info = enemies[enemy][2]
 
     # Back story
-    color.write("Some Backstory", "stdout")
+    color.write("\nYou are minding your own buiseness when you get jumped by ", "stdin")
+    color.write(enemy, "COMMENT")
+    color.write("! \nThe reason why ", "stdin")
+    color.write(enemy, "COMMENT")
+    color.write(" is the enemy: \n{}\n\n".format(enemy_info), "stdin")
 
     # Set starting HP
-    enemy_hp = randint(75,150)
+    enemy_hp = randint(75,125)
     user_hp = 100
 
     move_restriction = 1
@@ -138,16 +146,15 @@ def start(user):
         enemy_hp -= damage_dealt
 
         # Calculate damage done to user
-        damage = enemies[enemy][1]
         enemy_damage_dealt = randint(damage[0], damage[1])
         user_hp -= enemy_damage_dealt
 
         # If the hp for the user or enemy is negative set it to 0
         if user_hp < 0 or enemy_hp < 0:
-            if user_hp <= 0:
-                user_hp = 0
-            else:
+            if enemy_hp <= 0:
                 enemy_hp = 0
+            else:
+                user_hp = 0
         
         # Output the stats for the round
         color.write("\n≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈", "stdout")
@@ -170,16 +177,25 @@ def start(user):
 
         last_attack = attack_choice
 
-        if user_hp <= 0:
-                game_over(user)
-        elif enemy_hp <= 0:
-            victory(user)
+        if enemy_hp <= 0:
+            victory(user, enemy)
+        elif user_hp <= 0:
+            game_over(user, enemy)
 
 
-def game_over(user):
+def game_over(user, enemy):
     """Allow the user to decide whether they want to try again, return to the main menu or quit after a death"""
-    color.write("\nYou ", "stdout")
-    color.write("DIED", "COMMENT")
+    color.write("""\n
+ _______   _______  _______  _______     ___   .___________. __  
+|       \ |   ____||   ____||   ____|   /   \  |           ||  | 
+|  .--.  ||  |__   |  |__   |  |__     /  ^  \ `---|  |----`|  | 
+|  |  |  ||   __|  |   __|  |   __|   /  /_\  \    |  |     |  | 
+|  '--'  ||  |____ |  |     |  |____ /  _____  \   |  |     |__| 
+|_______/ |_______||__|     |_______/__/     \__\  |__|     (__)""", "COMMENT")
+    color.write("\n\nYou were defeated by ", "stdout")
+    color.write("{}".format(enemy), "COMMENT")
+
+    # Print menu of options
     color.write("\n=====~=====~=====~=====~=====~=====~=====~=====~=====~=====~=====~=====~=====~==", "stdout")
     color.write("\nTo select an option enter the number assigned to it", "stdout")
     color.write("\n1) ", "stdout")
@@ -199,9 +215,18 @@ def game_over(user):
     else:
         pass
 
-def victory(user):
+def victory(user, enemy):
     """Congratulate the user"""
-    print("Congratulations")
+    color.write("""\n
+____    ____  __    ______ .___________.  ______   .______     ____    ____  __  
+\   \  /   / |  |  /      ||           | /  __  \  |   _  \    \   \  /   / |  | 
+ \   \/   /  |  | |  ,----'`---|  |----`|  |  |  | |  |_)  |    \   \/   /  |  | 
+  \      /   |  | |  |         |  |     |  |  |  | |      /      \_    _/   |  | 
+   \    /    |  | |  `----.    |  |     |  `--'  | |  |\  \----.   |  |     |__| 
+    \__/     |__|  \______|    |__|      \______/  | _| `._____|   |__|     (__)""", "STRING")
+
+    color.write("\n\nCongratulations! You have defeated ", "stdout")
+    color.write(enemy, "COMMENT")
 
 
 def exit_game(user):
