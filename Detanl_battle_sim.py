@@ -2,7 +2,7 @@
 
 # Modified: 23/10/2019
 # Created: 29/07/2019
-# By Chris Sa
+# By JJeeff248
 
 from error_module import *
 from random import randint
